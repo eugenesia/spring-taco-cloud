@@ -32,8 +32,12 @@ public class JdbcIngredientRepository implements IngredientRepository {
 
   @Override
   public Ingredient save(Ingredient ingredient) {
-    // TODO Auto-generated method stub
-    return null;
+    jdbc.update(
+      "INSERT INTO Ingredient (id, name, type) VALUES (?, ?, ?)",
+      ingredient.getId(),
+      ingredient.getName(),
+      ingredient.getType().toString());
+    return ingredient;
   }
   
   private Ingredient mapRowToIngredient(ResultSet rs, int rowNum) throws SQLException {
