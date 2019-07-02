@@ -12,8 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import lombok.extern.slf4j.Slf4j;
 import tacos.Taco;
@@ -21,10 +23,12 @@ import tacos.data.IngredientRepository;
 import tacos.data.TacoRepository;
 import tacos.Ingredient;
 import tacos.Ingredient.Type;
+import tacos.Order;
 
 @Slf4j
 @Controller
 @RequestMapping("/design")
+@SessionAttributes("order") // Sessionise order so multiple Tacos can be added to order
 public class DesignTacoController {
   
   private final IngredientRepository ingredientRepo;
@@ -35,21 +39,21 @@ public class DesignTacoController {
     this.ingredientRepo = ingredientRepo;
     this.designRepo = designRepo;
   }
+  
+  // Ensures an Order object will be created in the model.
+  @ModelAttribute(name = "order")
+  public Order order() {
+    return new Order();
+  }
+  
+  // Ensures a Taco object will be created in the model.
+  @ModelAttribute(name = "taco")
+  public Taco taco() {
+    return new Taco();
+  }
 
   @GetMapping
   public String showDesignForm(Model model) {
-    // List<Ingredient> ingredients = Arrays.asList(
-    //   new Ingredient("FLTO", "Flour Tortilla", Type.WRAP),
-    //   new Ingredient("COTO", "Corn Tortilla", Type.WRAP),
-    //   new Ingredient("GRBF", "Ground Beef", Type.PROTEIN),
-    //   new Ingredient("CARN", "Carnitas", Type.PROTEIN),
-    //   new Ingredient("TMTO", "Diced Tomatoes", Type.VEGGIES),
-    //   new Ingredient("LETC", "Lettuce", Type.VEGGIES),
-    //   new Ingredient("CHED", "Cheddar", Type.CHEESE),
-    //   new Ingredient("JACK", "Monterrey Jack", Type.CHEESE),
-    //   new Ingredient("SLSA", "Salsa", Type.SAUCE),
-    //   new Ingredient("SRCR", "Sour Cream", Type.SAUCE)
-    // );
     List<Ingredient> ingredients = new ArrayList<>();
     ingredientRepo.findAll().forEach(i -> ingredients.add(i));
 
@@ -64,15 +68,15 @@ public class DesignTacoController {
     return "design";
   }
   
+  // @ModelAttribute Order order: Indicate value should come from model.
   @PostMapping
-  public String processDesign(@Valid Taco design, Errors errors) {
+  public String processDesign(@Valid Taco design, Errors errors, @ModelAttribute Order order) {
     if (errors.hasErrors()) {
       return "design";
     }
 
-    // Save the taco design
-    // We'll do this in chapter 3
-    log.info("Processing  design: " + design);
+    Taco saved = designRepo.save(design); // Save taco to database.
+    order.addDesign(saved); // Add taco to current order to sync with database.
 	  
     return "redirect:/orders/current";
   }
