@@ -1,5 +1,8 @@
 package tacos.data;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -18,8 +21,8 @@ public class JdbcIngredientRepository implements IngredientRepository {
 
   @Override
   public Iterable<Ingredient> findAll() {
-    // TODO Auto-generated method stub
-    return null;
+    return jdbc.query("SELECT id, name, type FROM Ingredient",
+      this::mapRowToIngredient);
   }
 
   @Override
@@ -32,5 +35,12 @@ public class JdbcIngredientRepository implements IngredientRepository {
   public Ingredient save(Ingredient ingredient) {
     // TODO Auto-generated method stub
     return null;
+  }
+  
+  private Ingredient mapRowToIngredient(ResultSet rs, int rowNum) throws SQLException {
+    return new Ingredient(
+      rs.getString("id"),
+      rs.getString("name"),
+      Ingredient.Type.valueOf(rs.getString("type")));
   }
 }
