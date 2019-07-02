@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.extern.slf4j.Slf4j;
 import tacos.Taco;
+import tacos.data.IngredientRepository;
 import tacos.Ingredient;
 import tacos.Ingredient.Type;
 
@@ -22,6 +24,13 @@ import tacos.Ingredient.Type;
 @Controller
 @RequestMapping("/design")
 public class DesignTacoController {
+  
+  private final IngredientRepository ingredientRepo;
+  
+  @Autowired
+  public DesignTacoController(IngredientRepository ingredientRepo) {
+    this.ingredientRepo = ingredientRepo;
+  }
 
   @GetMapping
   public String showDesignForm(Model model) {
