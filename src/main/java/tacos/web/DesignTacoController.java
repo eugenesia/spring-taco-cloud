@@ -1,7 +1,6 @@
 package tacos.web;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import lombok.extern.slf4j.Slf4j;
 import tacos.Taco;
 import tacos.data.IngredientRepository;
 import tacos.data.TacoRepository;
@@ -25,7 +23,6 @@ import tacos.Ingredient;
 import tacos.Ingredient.Type;
 import tacos.Order;
 
-@Slf4j
 @Controller
 @RequestMapping("/design")
 @SessionAttributes("order") // Sessionise order so multiple Tacos can be added to order
@@ -63,14 +60,14 @@ public class DesignTacoController {
           filterByType(ingredients, type));
     }
 
-    model.addAttribute("design", new Taco());
+    // model.addAttribute("design", new Taco());
 
     return "design";
   }
   
   // @ModelAttribute Order order: Indicate value should come from model.
   @PostMapping
-  public String processDesign(@Valid Taco design, Errors errors, @ModelAttribute Order order) {
+  public String processDesign(@Valid Taco design, Errors errors, @ModelAttribute Order order, @ModelAttribute Taco taco) {
     if (errors.hasErrors()) {
       return "design";
     }
