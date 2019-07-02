@@ -67,7 +67,7 @@ public class DesignTacoController {
   
   // @ModelAttribute Order order: Indicate value should come from model.
   @PostMapping
-  public String processDesign(@Valid Taco design, Errors errors, @ModelAttribute Order order, @ModelAttribute Taco taco) {
+  public String processDesign(@Valid Taco design, Errors errors, @ModelAttribute Order order) {
     if (errors.hasErrors()) {
       return "design";
     }
