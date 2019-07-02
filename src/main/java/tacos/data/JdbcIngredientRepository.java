@@ -27,8 +27,7 @@ public class JdbcIngredientRepository implements IngredientRepository {
 
   @Override
   public Ingredient findById(String id) {
-    // TODO Auto-generated method stub
-    return null;
+    return jdbc.queryForObject("SELECT id, name, type FROM Ingredient WHERE id=?", this::mapRowToIngredient, id);
   }
 
   @Override
