@@ -20,7 +20,9 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="Taco_Order") // Needed as table name different from class name.
+// Needed as table name different from class name, and class name is an SQL
+// reserved word.
+@Table(name="Taco_Order")
 public class Order implements Serializable {
   
   @Id
