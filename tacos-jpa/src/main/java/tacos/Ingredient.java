@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
+// JPA needs NoArgsConstructor, so create and make it private
 @NoArgsConstructor(access=AccessLevel.PRIVATE, force=true)
 @Entity
 public class Ingredient {
